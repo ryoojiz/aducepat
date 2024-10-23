@@ -7,12 +7,45 @@ import { Progress } from "@/components/ui/progress"
 import { Input } from "@/components/ui/input"
 
 const questions: Question[] = [
-  { id: 1, text: "What is 2 + 2?", type: "text" },
-  { id: 2, text: "Solve for x: 2x + 3 = 7", type: "text" },
-  { id: 3, imageUrl: "/placeholder.svg?height=300&width=300", type: "image" },
-  { id: 4, videoUrl: "https://example.com/math-video.mp4", type: "video" },
-  { id: 5, text: "What is the square root of 16?", type: "text" },
-  { id: 6, text: "If a triangle has angles 30°, 60°, and 90°, what type of triangle is it?", type: "text" },
+  { 
+    id: 1, 
+    text: "Jika cairan kol ungu dicampurkan ke pemutih pakaian, apa yang akan terjadi pada pemutih pakaian tersebut?", 
+    type: "image",
+    imageUrl: "../public/kol.png",
+    answer: { text: "Tidak Berubah Warna", type: "video", videoUrl: "@/public/kol.mp4" }
+  },
+  { 
+    id: 2, 
+    text: "Tentukan hasil dari 𝟔𝟓𝟏 × 𝟗 = …", 
+    type: "text",
+    answer: { text: "5859", type: "text" }
+  },
+  { 
+    id: 3, 
+    text: "Zat yang berfungsi sebagai desinfektan dan penghilang rasa serta bau pada air, khususnya kolam renang adalah zat …",
+    imageUrl: "/placeholder.svg?height=300&width=300", 
+    type: "image",
+    answer: { text: "Klorin atau Kaporit", type: "text" }
+  },
+  { 
+    id: 4, 
+    text: "Lapisan bumi yang berfungsi melindungi kita dari sinar UV adalah...",
+    type: "image",
+    answer: { text: "Ozon", type: "text" }
+  },
+  { 
+    id: 5, 
+    text: "Berapa nilai 𝒂 dan 𝒃?", 
+    type: "image",
+    imageUrl: "@/public/No5.png",
+    answer: { text: "a = 10 dan b = 10", type: "text" }
+  },
+  { 
+    id: 6, 
+    text: "Suku ke-8 dari barisan 2, 5, 8, 11, 14, … adalah …", 
+    type: "text",
+    answer: { text: "23", type: "text" }
+  },
 ];
 
 export default function OperatorView() {
@@ -24,6 +57,7 @@ export default function OperatorView() {
   ]);
   const [selectedParticipant, setSelectedParticipant] = useState<number | null>(null);
   const [gameState, setGameState] = useState<GameState>('waiting');
+  const [showAnswer, setShowAnswer] = useState(false);
 
   useEffect(() => {
     const storedState = localStorage.getItem('gameState');
@@ -33,6 +67,7 @@ export default function OperatorView() {
       setParticipants(parsedState.participants);
       setSelectedParticipant(parsedState.selectedParticipant);
       setGameState(parsedState.gameState);
+      setShowAnswer(parsedState.showAnswer);
     }
   }, []);
 
@@ -42,29 +77,34 @@ export default function OperatorView() {
       participants,
       selectedParticipant,
       gameState,
+      showAnswer,
     }));
-  }, [currentQuestionIndex, participants, selectedParticipant, gameState]);
+  }, [currentQuestionIndex, participants, selectedParticipant, gameState, showAnswer]);
 
   const handleKeyPress = useCallback((event: KeyboardEvent) => {
     if (['1', '2', '3'].includes(event.key)) {
       const participantId = parseInt(event.key);
       setSelectedParticipant(participantId);
       setGameState('selected');
+      setShowAnswer(false);
     } else if (event.key === 'Enter' && selectedParticipant) {
       setParticipants(prev => 
-        prev.map(p => p.id === selectedParticipant ? { ...p, score: p.score + 5 } : p)
+        prev.map(p => p.id === selectedParticipant ? { ...p, score: p.score + 10 } : p)
       );
       setGameState('correct');
+      setShowAnswer(true);
       setTimeout(() => {
         setSelectedParticipant(null);
         setGameState('waiting');
         setCurrentQuestionIndex((prev) => (prev + 1) % questions.length);
-      }, 3000);
+        setShowAnswer(false);
+      }, 5000);
     } else if (event.key === 'Backspace' && selectedParticipant) {
       setParticipants(prev => 
-        prev.map(p => p.id === selectedParticipant ? { ...p, score: Math.max(0, p.score - 2) } : p)
+        prev.map(p => p.id === selectedParticipant ? { ...p, score: Math.max(0, p.score - 5) } : p)
       );
       setGameState('incorrect');
+      setShowAnswer(false);
       setTimeout(() => {
         setSelectedParticipant(null);
         setGameState('waiting');
@@ -95,14 +135,27 @@ export default function OperatorView() {
           <CardHeader>
             <CardTitle className="text-2xl font-semibold">Question {currentQuestionIndex + 1} of {questions.length}</CardTitle>
           </CardHeader>
-          <CardContent>
-            {currentQuestion.type === 'text' && <p className="text-xl">{currentQuestion.text}</p>}
+          <CardContent className="space-y-4">
+            <p className="text-xl">{currentQuestion.text}</p>
             {currentQuestion.type === 'image' && <img src={currentQuestion.imageUrl} alt="Question" className="max-w-full h-auto mx-auto" />}
             {currentQuestion.type === 'video' && (
               <video controls className="max-w-full h-auto mx-auto">
                 <source src={currentQuestion.videoUrl} type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
+            )}
+            {showAnswer && (
+              <div className="mt-4 p-4 bg-green-100 rounded-md">
+                <h3 className="font-bold text-lg mb-2">Answer:</h3>
+                {currentQuestion.answer.type === 'text' && <p>{currentQuestion.answer.text}</p>}
+                {currentQuestion.answer.type === 'image' && <img src={currentQuestion.answer.imageUrl} alt="Answer" className="max-w-full h-auto mx-auto" />}
+                {currentQuestion.answer.type === 'video' && (
+                  <video controls className="max-w-full h-auto mx-auto">
+                    <source src={currentQuestion.answer.videoUrl} type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                )}
+              </div>
             )}
           </CardContent>
         </Card>
@@ -118,7 +171,7 @@ export default function OperatorView() {
               </CardHeader>
               <CardContent>
                 <p className="text-2xl font-bold text-indigo-600">{participant.score}</p>
-                <Progress value={(participant.score / 30) * 100} className="mt-2" />
+                <Progress value={(participant.score / 60) * 100} className="mt-2" />
               </CardContent>
             </Card>
           ))}
@@ -130,12 +183,15 @@ export default function OperatorView() {
             </p>
             <p>Game State: {gameState}</p>
             <p>Press 1, 2, or 3 to select a participant</p>
-            <p>Press Enter to mark correct (+5 points)</p>
-            <p>Press Backspace to mark incorrect (-2 points)</p>
+            <p>Press Enter to mark correct (+10 points)</p>
+            <p>Press Backspace to mark incorrect (-5 points)</p>
           </CardContent>
         </Card>
         <Button 
-          onClick={() => setCurrentQuestionIndex((prev) => (prev + 1) % questions.length)}
+          onClick={() => {
+            setCurrentQuestionIndex((prev) => (prev + 1) % questions.length);
+            setShowAnswer(false);
+          }}
           className="w-full"
         >
           Next Question

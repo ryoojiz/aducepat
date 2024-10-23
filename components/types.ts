@@ -1,9 +1,17 @@
-export interface Question {
-  id: number;
+export interface Answer {
   text?: string;
   imageUrl?: string;
   videoUrl?: string;
   type: 'text' | 'image' | 'video';
+}
+
+export interface Question {
+  id: number;
+  text: string;
+  imageUrl?: string;
+  videoUrl?: string;
+  type: 'text' | 'image' | 'video';
+  answer: Answer;
 }
 
 export interface Participant {
