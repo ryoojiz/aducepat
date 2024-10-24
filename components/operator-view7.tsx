@@ -101,7 +101,7 @@ export default function OperatorView() {
       }, 5000);
     } else if (event.key === 'Backspace' && selectedParticipant) {
       setParticipants(prev => 
-        prev.map(p => p.id === selectedParticipant ? { ...p, score: Math.max(0, p.score - 5) } : p)
+        prev.map(p => p.id === selectedParticipant ? { ...p, score: p.score - 5 } : p)
       );
       setGameState('incorrect');
       setShowAnswer(false);
