@@ -9,8 +9,8 @@ const questions: Question[] = [
     id: 1, 
     text: "Jika cairan kol ungu dicampurkan ke pemutih pakaian, apa yang akan terjadi pada pemutih pakaian tersebut?", 
     type: "image",
-    imageUrl: "https://github.com/ryoojiz/aducepat/blob/master/app/assets/kol.png?raw=true",
-    answer: { text: "Tidak Berubah Warna", type: "text"}
+    imageUrl: "../public/kol.png",
+    answer: { text: "Tidak Berubah Warna", type: "video", videoUrl: "@/public/kol.mp4" }
   },
   { 
     id: 2, 
@@ -59,7 +59,7 @@ export default function PublicView() {
 
   useEffect(() => {
     const checkForUpdates = () => {
-      const storedState = localStorage.getItem('gameState');
+      const storedState = localStorage.getItem('gameState8');
       if (storedState) {
         const parsedState = JSON.parse(storedState);
         setCurrentQuestionIndex(parsedState.currentQuestionIndex);
@@ -69,7 +69,7 @@ export default function PublicView() {
 
         if (parsedState.gameState === 'selected') {
           setShowVignette(true);
-          const drumrollAudio = new Audio('@/components/drumroll.mp3');
+          const drumrollAudio = new Audio('https://s3.filebin.net/filebin/4c62d6a8c0ed7a42a835f01411b524b49cf9364c38f429a3ca5ec022748f7d8e/70b65a501c2c7c5c92d8a65d9868efde3bbb3fb8d2b55feeba252b3706f8dfdd?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=7pMj6hGeoKewqmMQILjm%2F20241024%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241024T010854Z&X-Amz-Expires=60&X-Amz-SignedHeaders=host&response-cache-control=max-age%3D60&response-content-disposition=filename%3D%22drumroll.mp3%22&response-content-type=audio%2Fmpeg&X-Amz-Signature=b92127a551612beb41ad7e24711da75ad3c90e5b9b7a7732568574c3100dc61b');
           drumrollAudio.play();
         } else if (['correct', 'incorrect'].includes(parsedState.gameState)) {
           setShowVignette(false);
@@ -93,30 +93,15 @@ export default function PublicView() {
         <div className="absolute inset-0 bg-black bg-opacity-50 z-10 pointer-events-none animate-pulse" />
       )}
       <div className="max-w-4xl w-full space-y-8 relative z-20">
-        <h1 className="text-4xl font-bold text-center text-indigo-600">Math Competition - Public View</h1>
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-2xl font-semibold">Question {currentQuestionIndex + 1} of {questions.length}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {currentQuestion.type === 'text' && <p className="text-xl">{currentQuestion.text}</p>}
-            {currentQuestion.type === 'image' && <img src={currentQuestion.imageUrl} alt="Question" className="max-w-full h-auto mx-auto" />}
-            {currentQuestion.type === 'video' && (
-              <video controls className="max-w-full h-auto mx-auto">
-                <source src={currentQuestion.videoUrl} type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
-            )}
-          </CardContent>
-        </Card>
+        <h1 className="text-4xl font-bold text-center text-white">Cerdas Cermat Kelas 8</h1>
         <div className="grid grid-cols-3 gap-4">
           {participants.map((participant) => (
-            <Card key={participant.id} className={selectedParticipant === participant.id ? 'ring-2 ring-indigo-500' : ''}>
+            <Card key={participant.id} className={selectedParticipant === participant.id ? 'ring-2 ring-secondary' : ''}>
               <CardHeader>
                 <CardTitle>{participant.name}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-2xl font-bold text-indigo-600">{participant.score}</p>
+                <p className="text-2xl font-bold text-secondary">{participant.score}</p>
                 <Progress value={(participant.score / 60) * 100} className="mt-2" />
               </CardContent>
             </Card>
@@ -125,10 +110,10 @@ export default function PublicView() {
         <Card>
           <CardContent>
             <p className="text-2xl font-bold text-center">
-              {gameState === 'waiting' && 'Waiting for participants...'}
-              {gameState === 'selected' && `Participant ${selectedParticipant} selected!`}
-              {gameState === 'correct' && 'Correct answer!'}
-              {gameState === 'incorrect' && 'Incorrect answer!'}
+              {gameState === 'waiting' && 'Menunggu Peserta'}
+              {gameState === 'selected' && `Peserta ${selectedParticipant} menjawab!`}
+              {gameState === 'correct' && 'Jawaban Benar!'}
+              {gameState === 'incorrect' && 'Jawaban Salah!'}
             </p>
           </CardContent>
         </Card>

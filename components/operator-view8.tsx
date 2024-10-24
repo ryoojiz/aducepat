@@ -11,7 +11,7 @@ const questions: Question[] = [
     id: 1, 
     text: "Jika cairan kol ungu dicampurkan ke pemutih pakaian, apa yang akan terjadi pada pemutih pakaian tersebut?", 
     type: "image",
-    imageUrl: "https://github.com/ryoojiz/aducepat/blob/master/app/assets/kol.png?raw=true",
+    imageUrl: "./kol.png",
     answer: { text: "Tidak Berubah Warna", type: "video", videoUrl: "@/public/kol.mp4" }
   },
   { 
@@ -60,7 +60,7 @@ export default function OperatorView() {
   const [showAnswer, setShowAnswer] = useState(false);
 
   useEffect(() => {
-    const storedState = localStorage.getItem('gameState');
+    const storedState = localStorage.getItem('gameState8');
     if (storedState) {
       const parsedState = JSON.parse(storedState);
       setCurrentQuestionIndex(parsedState.currentQuestionIndex);
@@ -72,7 +72,7 @@ export default function OperatorView() {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('gameState', JSON.stringify({
+    localStorage.setItem('gameState8', JSON.stringify({
       currentQuestionIndex,
       participants,
       selectedParticipant,
@@ -101,7 +101,7 @@ export default function OperatorView() {
       }, 5000);
     } else if (event.key === 'Backspace' && selectedParticipant) {
       setParticipants(prev => 
-        prev.map(p => p.id === selectedParticipant ? { ...p, score: Math.max(0, p.score - 5) } : p)
+        prev.map(p => p.id === selectedParticipant ? { ...p, score: p.score - 5 } : p)
       );
       setGameState('incorrect');
       setShowAnswer(false);
@@ -128,37 +128,9 @@ export default function OperatorView() {
   const currentQuestion = questions[currentQuestionIndex];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-indigo-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="max-w-4xl w-full space-y-8">
         <h1 className="text-4xl font-bold text-center text-indigo-600">Math Competition - Operator View</h1>
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-2xl font-semibold">Question {currentQuestionIndex + 1} of {questions.length}</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <p className="text-xl">{currentQuestion.text}</p>
-            {currentQuestion.type === 'image' && <img src={currentQuestion.imageUrl} alt="Question" className="max-w-full h-auto mx-auto" />}
-            {currentQuestion.type === 'video' && (
-              <video controls className="max-w-full h-auto mx-auto">
-                <source src={currentQuestion.videoUrl} type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
-            )}
-            {showAnswer && (
-              <div className="mt-4 p-4 bg-green-100 rounded-md">
-                <h3 className="font-bold text-lg mb-2">Answer:</h3>
-                {currentQuestion.answer.type === 'text' && <p>{currentQuestion.answer.text}</p>}
-                {currentQuestion.answer.type === 'image' && <img src={currentQuestion.answer.imageUrl} alt="Answer" className="max-w-full h-auto mx-auto" />}
-                {currentQuestion.answer.type === 'video' && (
-                  <video controls className="max-w-full h-auto mx-auto">
-                    <source src={currentQuestion.answer.videoUrl} type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
-                )}
-              </div>
-            )}
-          </CardContent>
-        </Card>
         <div className="grid grid-cols-3 gap-4">
           {participants.map((participant) => (
             <Card key={participant.id} className={selectedParticipant === participant.id ? 'ring-2 ring-indigo-500' : ''}>
