@@ -11,7 +11,7 @@ const questions: Question[] = [
     id: 1, 
     text: "Jika cairan kol ungu dicampurkan ke pemutih pakaian, apa yang akan terjadi pada pemutih pakaian tersebut?", 
     type: "image",
-    imageUrl: "./kol.png",
+    imageUrl: "https://github.com/ryoojiz/aducepat/blob/master/app/assets/kol.png?raw=true",
     answer: { text: "Tidak Berubah Warna", type: "video", videoUrl: "@/public/kol.mp4" }
   },
   { 

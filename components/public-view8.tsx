@@ -9,8 +9,8 @@ const questions: Question[] = [
     id: 1, 
     text: "Jika cairan kol ungu dicampurkan ke pemutih pakaian, apa yang akan terjadi pada pemutih pakaian tersebut?", 
     type: "image",
-    imageUrl: "../public/kol.png",
-    answer: { text: "Tidak Berubah Warna", type: "video", videoUrl: "@/public/kol.mp4" }
+    imageUrl: "https://github.com/ryoojiz/aducepat/blob/master/app/assets/kol.png?raw=true",
+    answer: { text: "Tidak Berubah Warna", type: "text"}
   },
   { 
     id: 2, 
@@ -88,7 +88,7 @@ export default function PublicView() {
   const currentQuestion = questions[currentQuestionIndex];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-indigo-100 flex items-center justify-center p-4 relative">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4 relative">
       {showVignette && (
         <div className="absolute inset-0 bg-black bg-opacity-50 z-10 pointer-events-none animate-pulse" />
       )}
